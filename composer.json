@@ -1,0 +1,22 @@
+{
+    "name": "phprivoxy/core",
+    "description": "Core library for TCP connections handling.",
+    "type": "application",
+    "homepage": "https://www.phprivoxy.ru",
+    "license": "MIT",
+    "keywords": ["phprivoxy", "core", "tcp", "ssl", "http", "https", "connection", "connections", "high-performance", "handling", "handler", "processing", "process"],
+    "autoload": {
+        "psr-4": {
+            "PHPrivoxy\\Core\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Mikhail (Balpom)"
+        }
+    ],
+    "require": {
+        "php": ">=8.1",
+        "workerman/workerman": ">=4.1.5"
+    }
+}
