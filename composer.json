@@ -1,7 +1,7 @@
 {
     "name": "phprivoxy/core",
     "description": "Core library for TCP connections handling.",
-    "type": "application",
+    "type": "library",
     "homepage": "https://www.phprivoxy.ru",
     "license": "MIT",
     "keywords": ["phprivoxy", "core", "tcp", "ssl", "http", "https", "connection", "connections", "high-performance", "handling", "handler", "processing", "process"],
