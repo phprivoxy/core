@@ -32,7 +32,7 @@ $handler = new HelloWorld();
 new PHPrivoxy($handler); // By default, it listen all connections on 8080 port.
 ```
 
-This sample you may find at "tests" directory.
+This sample you also may find at "tests" directory.
 
 Just run it:
 ```bash
