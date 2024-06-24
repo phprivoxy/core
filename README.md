@@ -40,7 +40,9 @@ php tests/test.php start
 ```
 
 Configure your browser to work through a proxy server with the IP address 127.0.0.1 and port 8080.
+
 Try to open any site on HTTP protocol. As sample, try to open http://php.net, http://google.com, http://microsoft.com.
+
 Try to open http://not-existing-site/ - it will work! :-)
 
 ### License
