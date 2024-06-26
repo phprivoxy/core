@@ -46,4 +46,4 @@ Try to open any site on HTTP protocol. As sample, try to open http://php.net, ht
 Try to open http://not-existing-site/ - it will work! :-)
 
 ### License
-MIT License See [LICENSE.MD](LICENSE.MD)
+MIT License See [LICENSE](LICENSE)
