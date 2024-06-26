@@ -16,4 +16,4 @@ class HelloWorld implements TcpConnectionHandlerInterface
 }
 
 $handler = new HelloWorld();
-new PHPrivoxy($handler);
+new Server($handler);
