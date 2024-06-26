@@ -9,7 +9,7 @@ This PHP package based on Workerman framework (https://github.com/walkor/workerm
 ### Installation
 #### Using composer (recommended)
 ```bash
-composer require phprivoxy/core
+composer create phprivoxy/core
 ```
 
 ### Simple sample
