@@ -11,25 +11,29 @@ class Server
 {
     private string $workerName = 'PHPrivoxy'; // Worker name.
     private int $processes; // Number of workers processes.
+    private string $ip; // PHPrivoxy IP.
     private int $port; // PHPrivoxy port.
     private TcpConnectionHandlerInterface $handler;
 
-    public function __construct(TcpConnectionHandlerInterface $handler,
-            int $processes = 1,
-            int $port = 8080,
+    public function __construct(
+            TcpConnectionHandlerInterface $handler,
+            int $processes = 1, // Default number of workers processes.
+            int $port = 8080, // Default PHPrivoxy port.
+            ?string $ip = null,
             ?string $name = null
     )
     {
         $this->setHandler($handler);
         $this->setProcesses($processes);
         $this->setPort($port);
+        $this->setIP($ip);
         $this->setWorkerName($name);
         $this->run();
     }
 
-    public function run(): void
+    private function run(): void
     {
-        $worker = new Worker('tcp://0.0.0.0:' . $this->port);
+        $worker = new Worker('tcp://' . $this->ip . ':' . $this->port);
         $worker->count = $this->processes;
         $worker->name = $this->workerName;
 
@@ -60,6 +64,15 @@ class Server
             throw new CoreException('Incorrect worker port.');
         }
         $this->port = $port;
+    }
+
+    private function setIP(?string $ip): void
+    {
+        // TODO: IP correctness checking.
+        if (null === $ip) {
+            $ip = '0.0.0.0';
+        }
+        $this->ip = $ip;
     }
 
     private function setWorkerName(?string $name): void
