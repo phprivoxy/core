@@ -19,7 +19,7 @@ class Server
             TcpConnectionHandlerInterface $handler,
             int $processes = 1, // Default number of workers processes.
             int $port = 8080, // Default PHPrivoxy port.
-            ?string $ip = null,
+            string $ip = '0.0.0.0',
             ?string $name = null
     )
     {
@@ -69,8 +69,8 @@ class Server
     private function setIP(?string $ip): void
     {
         // TODO: IP correctness checking.
-        if (null === $ip) {
-            $ip = '0.0.0.0';
+        if (empty($ip)) {
+            throw new CoreException('Incorrect worker host.');
         }
         $this->ip = $ip;
     }
