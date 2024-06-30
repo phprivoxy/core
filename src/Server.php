@@ -4,36 +4,37 @@ declare(strict_types=1);
 
 namespace PHPrivoxy\Core;
 
-use Workerman\Worker;
 use Workerman\Connection\TcpConnection;
 
 class Server
 {
-    private string $workerName = 'PHPrivoxy'; // Worker name.
-    private int $processes; // Number of workers processes.
-    private string $ip; // PHPrivoxy IP.
-    private int $port; // PHPrivoxy port.
+    use RootPath;
+
+    private int $processes;
+    private string $ip;
+    private int $port;
+    private string $workerName;
     private TcpConnectionHandlerInterface $handler;
 
     public function __construct(
             TcpConnectionHandlerInterface $handler,
-            int $processes = 1, // Default number of workers processes.
-            int $port = 8080, // Default PHPrivoxy port.
-            string $ip = '0.0.0.0',
-            ?string $name = null
+            int $processes = 1, // Number of workers processes.
+            int $port = 8080, // PHPrivoxy port.
+            string $ip = '0.0.0.0', // PHPrivoxy IP.
+            string $workerName = 'PHPrivoxy'// Worker name.
     )
     {
         $this->setHandler($handler);
         $this->setProcesses($processes);
         $this->setPort($port);
         $this->setIP($ip);
-        $this->setWorkerName($name);
+        $this->setWorkerName($workerName);
         $this->run();
     }
 
-    private function run(): void
+    public function run(): void
     {
-        $worker = new Worker('tcp://' . $this->ip . ':' . $this->port);
+        $worker = new ServerWorker('tcp://' . $this->ip . ':' . $this->port);
         $worker->count = $this->processes;
         $worker->name = $this->workerName;
 
@@ -42,7 +43,17 @@ class Server
             $this->handler->handle($connection, $connectionParameters);
         };
 
-        Worker::runAll();
+        ServerWorker::runAll();
+    }
+
+    public static function setLogDirectory(?string $path) // Absolute path.
+    {
+        ServerWorker::setLogDirectory($path);
+    }
+
+    public static function setTmpDirectory(?string $path) // Absolute path.
+    {
+        ServerWorker::setTmpDirectory($path);
     }
 
     private function setHandler(TcpConnectionHandlerInterface $handler): void
@@ -50,17 +61,17 @@ class Server
         $this->handler = $handler;
     }
 
-    private function setProcesses(int $processes): void
+    private function setProcesses(?int $processes): void
     {
-        if (0 >= $processes) {
+        if (empty($processes) || 0 >= $processes) {
             throw new CoreException('Incorrect worker processes number.');
         }
         $this->processes = $processes;
     }
 
-    private function setPort(int $port): void
+    private function setPort(?int $port): void
     {
-        if (0 >= $port) {
+        if (empty($port) || 0 >= $port) {
             throw new CoreException('Incorrect worker port.');
         }
         $this->port = $port;
