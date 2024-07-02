@@ -15,6 +15,21 @@ class ServerWorker extends Worker
     private static ?string $logDirectory = null; // Absolute path to log files directory.
     private static ?string $tmpDirectory = null; // Absolute path to temporary files directory.
 
+    public function getRealSocketName()
+    {
+        return is_resource($this->_mainSocket) ? stream_socket_get_name($this->_mainSocket, false) : false;
+    }
+
+    public function updateSocketName(?string $socketname = null)
+    {
+        $socketname = empty($socketName) ? stream_socket_get_name($this->_mainSocket, false) : $socketname;
+        if (empty($socketname)) {
+            return;
+        }
+        $this->_socketName = $socketname;
+        $this->socket = $socketname;
+    }
+
     public static function setLogDirectory(?string $path)
     {
         self::$logDirectory = $path;
@@ -48,7 +63,8 @@ class ServerWorker extends Worker
         $backtrace = \debug_backtrace();
         static::$_startFile = $backtrace[\count($backtrace) - 1]['file'];
 
-        $unique_prefix = \str_replace('/', '_', static::$_startFile);
+        $pid = \posix_getpid();
+        $unique_prefix = $pid . \str_replace('/', '_', static::$_startFile);
 
         // Pid file.
         if (empty(static::$pidFile)) {
