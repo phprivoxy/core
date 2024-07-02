@@ -1,6 +1,6 @@
 {
     "name": "phprivoxy/core",
-    "description": "Core library for TCP connections handling.",
+    "description": "Core library for TCP and HTTP connections handling.",
     "type": "library",
     "homepage": "https://www.phprivoxy.ru",
     "license": "MIT",
