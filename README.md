@@ -12,14 +12,14 @@ This PHP package based on Workerman framework (https://github.com/walkor/workerm
 composer create phprivoxy/core
 ```
 
-### Simple sample
+### Simple TCP server sample
 
 ```php
 namespace PHPrivoxy\Core;
 
 use Workerman\Connection\TcpConnection;
 
-class HelloWorld implements TcpConnectionHandlerInterface
+class HelloWorld implements PHPrivoxy\Core\Tcp\TcpHandlerInterface
 {
     public function handle(TcpConnection $connection, ?ConnectionParameters $connectionParameters = null): void
     {
@@ -29,14 +29,14 @@ class HelloWorld implements TcpConnectionHandlerInterface
 }
 
 $handler = new HelloWorld();
-new Server($handler); // By default, it listen all connections on 8080 port.
+new TcpServer($handler, 1, 8080, '0.0.0.0');
 ```
 
 This sample you also may find at "tests" directory.
 
 Just run it:
 ```bash
-php tests/test.php start
+php tests/tcp_server.php start
 ```
 
 Configure your browser to work through a proxy server with the IP address 127.0.0.1 and port 8080.
@@ -44,6 +44,44 @@ Configure your browser to work through a proxy server with the IP address 127.0.
 Try to open any site on HTTP protocol. As sample, try to open http://php.net, http://google.com, http://microsoft.com.
 
 Try to open http://not-existing-site/ - it will work! :-)
+
+### Simple HTTP server sample
+
+```php
+namespace PHPrivoxy\Core;
+
+use Psr\Http\Server\RequestHandlerInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ResponseInterface;
+use Workerman\Connection\TcpConnection;
+
+class Psr7HelloWorld implements RequestHandlerInterface
+{
+    public function handle(ServerRequestInterface $request): ResponseInterface
+    {
+        return new Workerman\Psr7\Response(200, ['content-type' => 'text/html'], 'Hello, world!');
+    }
+}
+
+class ResponseHandler implements PHPrivoxy\Core\Http\ResponseHandlerInterface
+{
+    public function handle(ResponseInterface $response, TcpConnection $connection): void
+    {
+        $connection->send($response);
+        $connection->close();
+    }
+}
+
+$requestHandler = new Psr7HelloWorld();
+$responseHandler = new ResponseHandler();
+new HttpServer($requestHandler, $responseHandler, 1, 8080, '0.0.0.0');
+```
+
+This sample you also may find at "tests" directory.
+
+Just run it:
+```bash
+php tests/http_server.php start
 
 ### License
 MIT License See [LICENSE](LICENSE)
